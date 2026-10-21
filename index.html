@@ -54,7 +54,7 @@
     <div class="search-wrap">
      <span class="search-icon" aria-hidden="true">⌕</span>
      <input id="search" class="search" type="search" autocomplete="off" placeholder="Search flows or checkpoints" aria-label="Search architecture">
-     <span class="kbd">⌘ K</span>
+     <span class="kbd">Ctrl K</span>
      <div class="search-results" id="searchResults" role="listbox" aria-label="Search results"></div>
     </div>
    </div>
@@ -73,7 +73,7 @@
     <button type="button" id="zoomOut" aria-label="Zoom out">−</button>
     <button type="button" id="zoomIn" aria-label="Zoom in">+</button>
     <button type="button" id="fitBtn" class="fit" title="Fit entire diagram">Fit</button>
-    <button type="button" id="zoomLabel" style="min-width:42px;font-size:10px;color:#8498ae;cursor:default" tabindex="-1">70%</button>
+    <span id="zoomLabel" style="min-width:42px;height:34px;font-size:10px;color:#8498ae;display:grid;place-items:center" aria-label="Current zoom">70%</span>
    </div>
    <aside class="inspector" id="inspector" aria-label="Selected process details" aria-live="polite">
     <div class="inspector-head"><div><small id="inspectCode">PROCESS DETAILS</small><h2 id="inspectTitle">Select a node</h2></div><button type="button" id="closeInspector" class="close-inspector" aria-label="Close details">×</button></div>
