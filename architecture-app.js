@@ -126,9 +126,8 @@ function fitAll(){
 function defaultFraming(){
  const cw=wrap.clientWidth,ch=wrap.clientHeight;
  if(!state.flowId){
-  state.scale=Math.max(.35,Math.min(.82,(cw-88)/1420));
-  state.tx=(cw-1420*state.scale)/2;
-  state.ty=ch<660?-45:2;
+  if(cw<680){state.scale=Math.min(.98,(cw-30)/350);state.tx=12;state.ty=0}
+  else {state.scale=Math.max(.35,Math.min(.82,(cw-88)/1420));state.tx=(cw-1420*state.scale)/2;state.ty=ch<660?-45:2}
  }else{
   state.scale=Math.max(.64,Math.min(1,(cw-55)/890));
   state.tx=35;state.ty=Math.max(40,Math.min(100,ch*.19-130));
@@ -137,7 +136,7 @@ function defaultFraming(){
 }
 function centerNode(id){
  const p=state.positions[id];if(!p)return;
- state.tx=wrap.clientWidth*(state.inspector?.37:.49)-(p.x+p.w/2)*state.scale;
+ state.tx=wrap.clientWidth*(state.inspector ? .37 : .49)-(p.x+p.w/2)*state.scale;
  state.ty=wrap.clientHeight*.34-(p.y+p.h/2)*state.scale;
  applyTransform();
 }
