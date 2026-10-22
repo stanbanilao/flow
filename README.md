@@ -1,117 +1,69 @@
-# THYNKVERSE FLOW 2.0 — Interactive Architecture Atlas
+# THYNKVERSE FLOW 3.0 — Business Structure + Architecture Atlas
 
-**Version:** 2.0.0  
-**Updated:** 22 October 2026 (SAST)  
-**Status:** development branch / Vercel preview. **Not a LIVE approval.**  
-**Source of truth:** Control Room handovers, product contracts and the preserved original Flow. The diagram is documentation, not live monitoring.
+**Checkpoint:** 22 October 2026 (SAST)  
+**Status:** Development branch / Vercel Preview. LIVE unchanged.
 
-## Why v2 exists
+## Two tabs
 
-The prior v1 architecture explorer moved and re-centred the *entire master canvas* whenever a process was clicked. It also displayed many subprocesses as explanation text rather than diagram nodes.
+The Flow site now has a primary **Business Structure** view and a secondary **Interactive Architecture Atlas** tab. The user can switch between them without altering the preserved legacy client experience.
 
-**Flow 2.0 fixes this interaction contract:**
-
-1. The master map displays seven fixed, visually connected architecture regions, each previewing a sample of its processes.
-2. Click a system or any previewed process. A **fixed, connected subflow window** opens over the master canvas. The master map remains exactly where it was.
-3. Inside the window, **every main process** is represented as a stage node, connected by directional arrows. Stage nodes contain recursively expandable nested diagrams; no software depth limit is hard-coded.
-4. Click a stage to reveal its actual child nodes and connectors **at that stage**, without moving the master map or changing zoom. Continue into nested decisions or child steps.
-5. A decision may branch into **YES** and **NO** outcomes, both real clickable nodes leading to another applicable process.
-6. Cross-system links move the focus to the linked process **inside the fixed subflow window**, never by re-centring the master canvas.
-7. Pan or zoom the **master canvas only when you drag, scroll or select the explicit zoom controls**. A deep link can scroll *inside the fixed subflow pane* to reveal a requested stage, without moving the outer diagram.
-
-## Current coverage
-
-- **7** architecture domains
-- **73** main process stages
-- **254** nested subprocesses
-- **29** specifically linked cross-system process relationships
-- **7** decision gates with branching outcomes
-- Existing master-level connections across all seven domains
-
-The seven domains:
-
-| ID | System |
+| Path | Purpose |
 |---|---|
-| F01 | Product & Governance |
-| F02 | Business & Client Lifecycle |
-| F03 | Logic & Authorization |
-| F04 | Code, Records & Integrations |
-| F05 | Worker & Automation |
-| F06 | Release Environments |
-| F07 | Operational History & Roadmap |
+| / | Business Structure first/default |
+| /business-structure | Standalone Business Structure |
+| /architecture | Seven-domain Architecture Atlas second tab |
+| /business-structure?client=1 | Client-only Business Structure with no Atlas or owner editing controls |
+| /business-structure?client=1&name=Example&d=... | Client-only Business Structure including owner-added process data in the link |
+| /business-flow.html | Byte-for-byte original Cytoscape business diagram |
+| /c/:code | Original branded client page, with new mobile side filtering |
+| /admin | Existing company setup preview (NOT secure production authentication) |
 
-Detailed nodes cover sales intake, SharePoint, CompanyID, Super Control policy, email/password and Microsoft authentication, iDocs write-back, Chatto WhatsApp requests, Thynkly / Dialog Connect, Main Focus Supervisor reporting, and controlled environments.
+## Mobile floating View / Category controls
 
-### Example: LIVE authorization
+The full business diagram occupies the available screen. A narrow tab on the left edge opens the Business View and Show Category controls. The panel disappears when a filter is selected, when tapped outside, when explicitly closed, or after approximately 6.5 seconds of inactivity. It can be reopened without losing the selected filter.
 
-Open process \`F06.8\` — **Explicit LIVE approval**:
+The same mobile side-panel behavior has been added to the preserved /c/:code client page. This avoids leaving category fields in a large persistent overlay.
 
-- Expand the **Go / no-go decision** (\`F06.8.2\`) to see **YES / APPROVED → LIVE deployment** and **NO / REJECTED → STOP, correct and retest**.
-- Expand \`F06.9\` — LIVE deployment — to see exact product, release metadata, environment and smoke-check process, with post-deploy health branches.
-- Expand \`F06.10\` — Audit, rollback & monitoring — to see its own nested plan and recovery steps.
+## Add Process
 
-This three-stage illustration is **not the limit of the architecture**. Every one of the seven domains has its own set of full-length process sequences and nested checkpoints.
+The owner-facing Add Process dialog creates new boxes with a name, type/category, parent process, description, owner, relevant systems, and requirements. Parent-child connections are rendered in Cytoscape. The owner can remove custom boxes and their custom descendants.
 
-## Key files
+Custom additions are saved using **localStorage in the current browser**. They do not automatically synchronize to another device or a live server. Export and Import JSON is available for longer drafts or backups.
 
-| File | Purpose |
-|---|---|
-| \`index.html\` | Flow 2.0 entry / canvas shell |
-| \`flow-v2.css\` | Canvas, swimlanes, connectors, recursive nodes, decision styling, mobile layout |
-| \`flow-v2.js\` | Master graph, expandable stages, cross-link navigation, pan/zoom, search and deep links |
-| \`architecture-data.js\` | Preserved, documented v1 seven-domain baseline data |
-| \`architecture-expansion.js\` | Additive CRM 9.0 + Chatto + Thynkly + decision / cross-link reference layers |
-| \`business-flow.html\` | Preserved original Cytoscape business diagram |
-| \`client.html\` | Existing client page, still embedding the original business diagram |
-| \`admin.html\` | Existing setup preview (not secure production authentication) |
-| \`vercel.json\` | Existing and new static routes |
+The client share link includes owner-added process details in an encoded URL parameter when the link is small enough for reliable sharing (approximately 3,900 characters maximum). For longer diagrams, export JSON instead; do not silently discard custom work.
 
-## Existing Flow preservation
+## Share Business Structure only
 
-The original v1 business map remains byte-for-byte preserved in \`business-flow.html\`. The client iframe points to it, not the newly rebuilt \`/\` architecture. \`admin.html\` is unchanged. No CRM, Super Control, Supabase or SharePoint data and no private repository were modified in this work.
+Click **Client link** in the owner Business Structure. Optionally give the client/company name. Then choose:
 
-Routes:
-- \`/\` or \`/architecture\` — Flow 2.0 explorer
-- \`/business-flow\` or \`/business-flow.html\` — original business map
-- \`/c/:code\` — original client view
-- \`/admin\` — original setup-preview view
+- Include additions (embedded into the client URL)
+- Base structure only (without owner-added boxes)
 
-## How to navigate
+The resulting standalone client page displays **only Business Structure**, no Atlas tabs, no Add Process button, and no owner Import/Export controls. Clients can still view the diagram and use mobile category filters.
 
-- **Click a domain** to open all its process stages as a connected flow diagram.
-- **Click a stage** to reveal internal nodes; click a child node to continue.
-- **Expand all / Collapse all** affects only the open subflow; it does not move the master camera.
-- **Cross-link chips** identify relationships to another numbered system/process.
-- **Search** (Ctrl/Cmd+K) finds stages and subprocesses in all seven domains.
-- **Share** copies a URL fragment such as \`/#F06.8.2\`.
-- **Export** downloads the complete reference JSON for diagram or AI import.
-- **Drag blank canvas** to pan; scroll on blank master canvas to zoom. The subflow pane scrolls independently.
-- **Fit** re-centres **only when explicitly clicked**.
+**Privacy/security boundary:** Client-only means a separate, read-only-style UI, NOT authorization. These are public-link static files, not a private authenticated client portal. Do not include private customer data in custom process names/descriptions or shared URLs. A Vercel preview may require SSO sign-in. Public client links should be used only after an approved public release.
 
-## Release safety
+## Architecture Atlas
 
-Universal release sequence:
+The second tab preserves the Flow 2.0 atlas: seven domains, 73 main stages, 254 nested subprocesses, 29 detailed cross-links, and seven decision gateways. Opening process details does not recenter the master canvas. Release states are documentary, not current live telemetry or approvals.
 
-\`DEV/BUILD → TEST → VERIFY → DEMO/PILOT → VERIFY → LIVE\`
+## Main files
 
-Passing a stage does not authorize the next stage; do not change LIVE without owner approval. This architecture viewer is static, **read-only** and does not perform deployment, licensing, CRM writes or authentication.
+- index.html — Business-first homepage with both tabs.
+- business-structure.html, business-structure.css, business-structure.js — client share mode, mobile filter flyout, custom drafts and import/export.
+- business-engine.html — separate extension-enabled copy of the original business flow.
+- business-bridge.js — operations for adding, linking, selecting and removing custom business process nodes.
+- architecture.html — second-tab atlas.
+- architecture-data.js, architecture-expansion.js, flow-v2.js, flow-v2.css — architecture data and interactions.
+- business-flow.html — unmodified original, retained for legacy clients.
+- client.html + client-category-flyout.css + client-category-flyout.js — preserved client page with new mobile side controls.
+- admin.html — original setup-preview admin (unchanged).
+- vercel.json — isolated routing for all views.
 
-"Historical PASS" and "Frozen" describe documented handover checkpoints only. They **do not verify the current LIVE state**. Where the 21 October CRM 9.0 handover calls for read-only verification before Supervisor changes, the atlas marks those additions as proposed or requiring verification.
+## Checks
 
-## Verification results / release checklist
+Source and simulated behavioral checks completed: JavaScript syntax, required HTML IDs and asset references, Vercel rewrite destinations, preservation of the original business map, nested custom process additions, removal of custom descendants, safe input cleaning, browser-save logic, client-only URL generation, and the mobile panel opening and closing on selection.
 
-**Automated checks performed using the connected GitHub sources:**
-- Valid JS syntax for the new client runtime and extension.
-- All 73 main stages + 254 nested subprocesses uniquely indexed across seven domains.
-- All 29 explicit cross-process links and seven decision gate targets resolve.
-- Simulated interactions: opening, expanding, YES/NO branching, cross-system link, search, collapse and close.
-- **Master camera remains unchanged across all the above click operations.**
-- Vercel's linked preview build reports READY.
+Still required before any LIVE promotion: actual desktop/mobile browser testing, including touch events and inactivity behavior; client-link delivery with the deployment's access controls; and a check that the previous /c/:code and /admin pages remain correct. The branch and draft pull request must not be merged automatically.
 
-**Still required before merge or LIVE:**
-- Desktop/mobile visual browser acceptance on the preview URL, with horizontal scrolling and long expanded branches.
-- Test the preserved \`/business-flow.html\`, \`/c/:code\`, and \`/admin\` routes.
-- Confirm accessibility, keyboard paths and any desired presentation refinements.
-- Explicit authorization for promotion if the root route is public-facing.
-
-This is a versioned, reviewable change on a GitHub feature branch; it should not be merged automatically.
+Release order is DEV/BUILD → TEST → VERIFY → DEMO/PILOT → VERIFY → LIVE, with owner authorization at progression gates.
