@@ -83,3 +83,10 @@ body.share-only .bs-brand p{color:#b9cad9}
 }
 @media(max-width:370px){.bs-btn.icon{padding:7px}.bs-brand p{max-width:150px}.bs-actions .owner-action#exportButton{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important}}
+
+.portal-tabs{height:42px;flex:0 0 auto;display:flex;align-items:stretch;gap:5px;padding:4px 13px;background:#16283f;border-bottom:1px solid #425775;color:#9db5ce}
+.portal-tabs a{display:flex;align-items:center;color:#b8d0e6;padding:0 14px;font-size:11px;font-weight:850;border-radius:7px;text-decoration:none;white-space:nowrap}
+.portal-tabs a:hover{background:#294762}
+.portal-tabs a.active{background:#ee995e;color:#142538}
+.portal-tabs span{margin-left:auto;display:flex;align-items:center;color:#86a4bf;font-size:10px}
+@media(max-width:800px){.portal-tabs{height:38px;padding:4px 8px;gap:3px}.portal-tabs a{padding:0 9px;font-size:10px}.portal-tabs span{display:none}}
