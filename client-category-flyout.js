@@ -11,8 +11,8 @@ document.body.append(button,veil,pane);
 const viewCopy=pane.querySelector("#mobileBusinessView"),categoryCopy=pane.querySelector("#mobileBusinessCategory");
 viewCopy.innerHTML=view.innerHTML;categoryCopy.innerHTML=category.innerHTML;
 let timer;
-function close(){clearTimeout(timer);button.classList.remove("open");pane.classList.remove("open");veil.classList.remove("open");button.setAttribute("aria-expanded","false")}
-function idle(){clearTimeout(timer);timer=setTimeout(()=>{if(pane.contains(document.activeElement)&&document.activeElement.tagName==="SELECT")return idle();close()},6500)}
+function close(){clearTimeout(timer);if(pane.contains(document.activeElement)&&document.activeElement?.blur)document.activeElement.blur();button.classList.remove("open");pane.classList.remove("open");veil.classList.remove("open");button.setAttribute("aria-expanded","false")}
+function idle(){clearTimeout(timer);timer=setTimeout(close,6500)}
 function open(){
  const drawer=document.getElementById("brandDrawer"),brand=document.getElementById("brandTab");
  if(drawer?.classList.contains("open"))brand.click();
