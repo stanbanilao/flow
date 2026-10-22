@@ -66,3 +66,12 @@ a{text-decoration:none;color:inherit}button{touch-action:manipulation}
 
 /* Keep the selected process unmistakable; highlight never moves the diagram. */
 .stage-node.selected,.tree-node.selected{outline:2px solid #ef9056;outline-offset:2px;box-shadow:0 0 0 5px rgba(239,144,86,.10),0 9px 24px rgba(30,52,75,.14)}
+
+:root{--tabs-height:43px}
+.atlas-tabs{height:var(--tabs-height);background:#12243a;border-bottom:1px solid #38516b;display:flex;align-items:stretch;gap:5px;padding:4px 14px;color:#c4d9ed;position:relative;z-index:44}
+.atlas-tabs a{display:flex;align-items:center;padding:0 16px;border-radius:7px;font-size:12px;font-weight:800;color:#adc5df}
+.atlas-tabs a:hover{background:#243e5e}
+.atlas-tabs a.active{background:#ed9457;color:#1c283a}
+.atlas-tabs span{margin-left:auto;display:flex;align-items:center;color:#7898b7;font-size:10px}
+.shell{height:calc(100dvh - var(--top) - var(--tabs-height))}
+@media(max-width:780px){.atlas-tabs{padding:4px 7px;gap:4px}.atlas-tabs a{padding:0 9px;font-size:10px}.atlas-tabs span{display:none}.shell{height:calc(100dvh - var(--top) - var(--tabs-height))}}
