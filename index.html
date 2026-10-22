@@ -1,114 +1,84 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b182a">
-<meta name="description" content="Thynkverse FLOW v2 — expandable business, authorization, integration, automation and release architecture, with stable navigation and real connected process diagrams.">
-<title>THYNKVERSE FLOW | Interactive Architecture Atlas</title>
-<link rel="stylesheet" href="flow-v2.css">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101d2c">
+<meta name="description" content="Thynkverse interactive business structure with fullscreen diagram, compact side filters and client-only share links.">
+<title>Thynkverse Flow | Business Structure</title>
+<link rel="stylesheet" href="business-structure.css">
 </head>
 <body>
-<header class="topbar">
-  <div class="identity">
-    <button class="mobile-menu icon-button" type="button" id="menuOpen" aria-label="Open flow navigation">☰</button>
-    <span class="brandmark">T<span>V</span></span>
-    <div class="brandname"><strong>THYNKVERSE <em>FLOW</em></strong><small>INTERACTIVE ARCHITECTURE ATLAS · 2.0</small></div>
-  </div>
-  <div class="app-tag"><i></i> ARCHITECTURE REFERENCE <span>· NOT LIVE TELEMETRY</span></div>
-  <div class="top-actions">
-    <a class="header-link" href="/business-flow.html" title="Preserved original business diagram">Original Flow ↗</a>
-    <button class="header-btn" type="button" id="exportData">↓ Export</button>
-  </div>
+<header class="bs-head">
+ <div class="bs-brand"><div class="bs-logo">TV</div><div><h1 id="pageTitle">Business Structure</h1><p id="subtitle">Interactive organizational and process flow</p></div></div>
+ <div class="bs-actions">
+  <button type="button" class="bs-btn owner-action" id="exportButton" title="Export the added process data as JSON">↓ Export</button>
+  <button type="button" class="bs-btn primary owner-action" id="addButton">+ Add process</button>
+  <button type="button" class="bs-btn owner-action" id="shareButton">↗ Client link</button>
+  <button type="button" class="bs-btn icon" id="fitButton" title="Fit diagram to screen" aria-label="Fit diagram">⤢</button>
+ </div>
 </header>
+<nav class="portal-tabs owner-only" aria-label="Flow sections"><a class="active" href="/" aria-current="page">Business Structure</a><a href="/architecture">Interactive Architecture Atlas</a><span>Two connected views · Share Business Structure independently</span></nav>
+<main class="bs-stage" id="stage">
+ <iframe id="businessFrame" src="business-engine.html" title="Full-screen interactive Business Structure diagram"></iframe>
+ <button type="button" id="filterToggle" class="edge-toggle" aria-controls="filterPanel" aria-expanded="false" aria-label="Open business view and category filters"><span>View / Category</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M7 12h10M10 17h4"/></svg></button>
+ <div id="edgeMask" class="edge-mask"></div>
+ <aside class="edge-panel" id="filterPanel" aria-label="Business view and category controls">
+  <div class="panel-header"><div><small>DIAGRAM CONTROLS</small><h2>View & categories</h2></div><button class="x-btn" type="button" id="closeFilters" aria-label="Close filters">×</button></div>
+  <div class="form-field"><label for="viewSelect">Business view</label>
+   <select id="viewSelect">
+    <option value="all">Full company</option><option value="revenue">Sales → Payments → Collections</option>
+    <option value="debt">Debt Review operations</option><option value="removal">Removal</option>
+    <option value="mediation">Mediation</option><option value="care">Customer Care</option>
+    <option value="people">HR & People</option><option value="it">IT & Access</option><option value="thynkverse">Thynkverse layer</option>
+   </select>
+  </div>
+  <div class="form-field"><label for="categorySelect">Show category</label>
+   <select id="categorySelect"><option value="all">All categories</option><option value="department">Departments</option><option value="product">Products</option><option value="process">Processes</option><option value="checkpoint">Checkpoints</option><option value="system">IT / Systems</option><option value="thynkverse">Thynkverse</option></select>
+  </div>
+  <div class="form-field"><label for="findProcess">Find a process</label><input id="findProcess" placeholder="Sales, HR, automation…"></div>
+  <div class="panel-actions"><button type="button" id="panelFit">Fit diagram</button><button type="button" id="panelClose">Hide panel</button></div>
+  <div class="panel-actions owner-only"><button type="button" id="editLayout">Edit layout</button><button type="button" id="resetLayout">Reset positions</button></div>
+  <div class="panel-actions owner-only"><button type="button" id="importButton">Import JSON</button><button type="button" id="showAdd">+ Add process</button></div>
+  <p class="panel-hint">Tap the side tab to open filters. The panel automatically closes after inactivity, on selection, or when you tap outside it.</p>
+  <div class="panel-extra"><b>Business Structure only</b><p>No Architecture Atlas is included when you share the client-only link.</p><span id="draftCount">No custom processes added</span></div>
+ </aside>
+ <section class="detail-card" id="detailCard" hidden aria-label="Selected process information">
+  <div class="detail-top"><div><small id="detailType">PROCESS</small><h2 id="detailTitle">Business process</h2></div><button type="button" class="x-btn" id="detailClose" aria-label="Close process information">×</button></div>
+  <div class="detail-body" id="detailBody"></div>
+ </section>
+ <div class="status-tip">Drag the map to move · Tap a box for details</div>
 
-<div class="shell">
-  <div id="menuBackdrop" class="menu-backdrop"></div>
-  <aside class="sidebar" id="sidebar">
-    <div class="side-head">
-      <p class="side-kicker">MASTER STRUCTURE</p>
-      <h2>Explore the whole system.</h2>
-      <p>Select any system or a specific process. Its detailed flow opens without moving the master diagram.</p>
+ <div class="modal-backdrop" id="addModal" hidden>
+  <section class="modal-box" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+   <div class="modal-head"><div><small>BUSINESS STRUCTURE / OWNER EDITOR</small><h2 id="addTitle">Add another process</h2><p>Connect a new process to an existing box. Your additions will show on the diagram and can be shared with your client.</p></div><button class="x-btn" id="closeAdd" type="button" aria-label="Close add process">×</button></div>
+   <form id="addForm">
+    <div class="form-grid">
+     <div class="form-field wide"><label for="processTitle">Process or department name *</label><input id="processTitle" name="title" required maxlength="85" placeholder="e.g. Quality assurance"></div>
+     <div class="form-field"><label for="processParent">Connect after *</label><select id="processParent" name="parent" required></select></div>
+     <div class="form-field"><label for="processCategory">Category *</label><select id="processCategory" name="cat"><option value="process">Process</option><option value="department">Department</option><option value="product">Product</option><option value="checkpoint">Checkpoint</option><option value="system">IT / System</option><option value="thynkverse">Thynkverse</option></select></div>
+     <div class="form-field wide"><label for="processDesc">What happens at this step?</label><textarea id="processDesc" name="desc" maxlength="700" placeholder="Short explanation"></textarea></div>
+     <div class="form-field"><label for="processOwner">Responsible owner</label><input id="processOwner" name="owner" maxlength="110" placeholder="Team or role"></div>
+     <div class="form-field"><label for="processSystems">Systems used</label><input id="processSystems" name="systems" placeholder="CRM, SharePoint, Finwise"></div>
+     <div class="form-field wide"><label for="processNeeds">Requirements (comma separated)</label><input id="processNeeds" name="needs" placeholder="Approved data, signed documents"></div>
     </div>
-    <button type="button" class="all-map" id="allMap"><span class="all-map-icon">◇</span><span>Master overview<small>Seven connected architecture areas</small></span><b>↗</b></button>
-    <p class="nav-kicker">SYSTEM DOMAINS / 01—07</p>
-    <nav id="flowNavigation" class="flow-navigation" aria-label="Architecture system navigation"></nav>
-    <div class="sidebar-div"></div>
-    <p class="nav-kicker">JUMP TO A PROCESS</p>
-    <div class="quicklinks">
-      <button type="button" data-open="F06.8">Explicit LIVE approval <span>↗</span></button>
-      <button type="button" data-open="F06.9">LIVE deployment <span>↗</span></button>
-      <button type="button" data-open="F06.10">Audit, rollback & monitoring <span>↗</span></button>
-      <button type="button" data-open="F05.2">Worker isolation gate <span>↗</span></button>
-      <button type="button" data-open="F02.11">Supervisor / Main Focus <span>↗</span></button>
-    </div>
-    <div class="side-note"><b>Universal release authority</b><span>DEV → TEST → VERIFY → DEMO → VERIFY → LIVE. The diagram does not authorize or trigger any deployment.</span></div>
-    <footer>Original Flow preserved · New architecture on draft branch</footer>
-  </aside>
-
-  <main class="workspace">
-    <div class="toolbar">
-      <div class="heading">
-        <span class="overline">MASTER VIEW / CONNECTED SYSTEM LANDSCAPE</span>
-        <h1>Thynkverse Architecture <span>— Interactive Flow</span></h1>
-        <p>Click any process to reveal its connected subflow. Nothing automatically repositions your map.</p>
-      </div>
-      <div class="toolbar-controls">
-        <label class="search-box" for="findProcess">
-          <span aria-hidden="true">⌕</span>
-          <input type="search" id="findProcess" placeholder="Search every system & step" autocomplete="off" aria-label="Search all architecture processes">
-          <kbd>Ctrl K</kbd>
-          <div id="searchMenu" class="search-menu" role="listbox" aria-label="Matching architecture processes"></div>
-        </label>
-        <button type="button" class="filter-btn on" id="linksToggle" aria-pressed="true">↗ Cross links</button>
-        <button type="button" class="filter-btn" id="fitCanvas">⤢ Fit</button>
-      </div>
-    </div>
-    <div class="canvas-wrap" id="canvasWrap">
-      <div class="master-hint"><b>01—07 / MASTER MAP</b><span>Solid arrows = process sequence · Dashed arrows = cross-system relationship</span></div>
-      <div id="viewport" class="viewport" aria-label="Pan and zoom master architecture diagram" tabindex="0">
-        <div class="world" id="world">
-          <svg id="masterEdges" class="master-edges" aria-hidden="true"></svg>
-          <div class="regionLayer" id="regionLayer"></div>
-        </div>
-      </div>
-      <div class="canvas-guidance">Click to open a subflow · Drag blank space to pan · Scroll to zoom</div>
-      <div class="map-zoom">
-        <button type="button" id="zoomOut" aria-label="Zoom out">−</button>
-        <span id="zoomPercent">70%</span>
-        <button type="button" id="zoomIn" aria-label="Zoom in">+</button>
-        <button type="button" id="fitCanvas2" aria-label="Fit all groups">Fit</button>
-      </div>
-      <div class="map-stats" id="mapStats"></div>
-
-      <section class="flow-window" id="flowWindow" role="dialog" aria-label="Expanded connected architecture subflow" aria-modal="false" hidden>
-        <header class="flow-window-head">
-          <div class="flow-window-identity"><span id="detailNum" class="detail-num">06</span><div><small id="detailKicker">FLOW / EXPANDED</small><h2 id="detailTitle">Release environments</h2><p id="detailSummary"></p></div></div>
-          <div class="detail-actions">
-            <button type="button" id="expandAll" class="detail-tool" title="Expand every nested process in this system">Expand all</button>
-            <button type="button" id="collapseAll" class="detail-tool" title="Collapse all nested processes">Collapse all</button>
-            <button type="button" id="copyNodeLink" class="detail-tool" title="Copy link to this stage">Share</button>
-            <button type="button" id="closeFlow" class="close-flow" aria-label="Close expanded process">×</button>
-          </div>
-        </header>
-        <div class="subgraph-hint">
-          <span id="breadCrumb" class="breadcrumb">Master / System</span>
-          <span>Click any node to open its details <b>at that node</b> · Only you control canvas movement.</span>
-        </div>
-        <div class="flow-scroll" id="flowScroll">
-          <div id="flowMap" class="flow-map"></div>
-        </div>
-        <footer class="flow-window-foot">
-          <span id="flowStats">0 connected processes</span>
-          <span>Reference model · No operational writes</span>
-        </footer>
-      </section>
-      <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    </div>
-  </main>
-</div>
-<script src="architecture-data.js"></script>
-<script src="architecture-expansion.js"></script>
-<script src="flow-v2.js"></script>
+    <p class="modal-note">These are diagram notes—not a live CRM/database change. Edits are saved in this browser. To share them, use the Client link or export the JSON.</p>
+    <div class="modal-actions"><button type="button" id="cancelAdd">Cancel</button><button type="submit" class="primary">+ Add connected process</button></div>
+   </form>
+  </section>
+ </div>
+ <div class="modal-backdrop" id="shareModal" hidden>
+  <section class="modal-box" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+   <div class="modal-head"><div><small>BUSINESS STRUCTURE / CLIENT DELIVERY</small><h2 id="shareTitle">Send Business Structure only</h2><p>Clients will see the business diagram and its side filters—not your Architecture Atlas, add-process editor or owner tools.</p></div><button class="x-btn" id="closeShare" type="button" aria-label="Close sharing">×</button></div>
+   <div class="form-field"><label for="clientName">Client/company name (optional)</label><input id="clientName" maxlength="100" placeholder="e.g. Remedy Debts"></div>
+   <div class="form-field"><label for="shareUrl">Client-only link</label><textarea id="shareUrl" readonly></textarea></div>
+   <p id="shareStatus"></p>
+   <div class="modal-actions"><button type="button" id="shareBase">Base structure only</button><button type="button" class="primary" id="copyShare">Copy client link</button></div>
+   <p class="modal-note">A sharing URL includes any custom processes embedded in it. Only include information suitable for sharing. This is a public-link preview, not a password-protected client portal.</p>
+  </section>
+ </div>
+ <input id="importFile" type="file" accept=".json,application/json" hidden>
+ <div class="message" id="message" hidden role="status"></div>
+</main>
+<script src="business-structure.js"></script>
 </body>
 </html>
