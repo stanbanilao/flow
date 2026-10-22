@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101d2c">
+<meta name="description" content="Thynkverse interactive business structure with fullscreen diagram, compact side filters and client-only share links.">
+<title>Thynkverse Flow | Business Structure</title>
+<link rel="stylesheet" href="business-structure.css">
+</head>
+<body>
+<header class="bs-head">
+ <div class="bs-brand"><div class="bs-logo">TV</div><div><h1 id="pageTitle">Business Structure</h1><p id="subtitle">Interactive organizational and process flow</p></div></div>
+ <div class="bs-actions">
+  <button type="button" class="bs-btn owner-action" id="exportButton" title="Export the added process data as JSON">↓ Export</button>
+  <button type="button" class="bs-btn primary owner-action" id="addButton">+ Add process</button>
+  <button type="button" class="bs-btn owner-action" id="shareButton">↗ Client link</button>
+  <button type="button" class="bs-btn icon" id="fitButton" title="Fit diagram to screen" aria-label="Fit diagram">⤢</button>
+ </div>
+</header>
+<nav class="portal-tabs owner-only" aria-label="Flow sections"><a class="active" href="/" aria-current="page">Business Structure</a><a href="/architecture">Interactive Architecture Atlas</a><span>Two connected views · Share Business Structure independently</span></nav>
+<main class="bs-stage" id="stage">
+ <iframe id="businessFrame" src="business-engine.html" title="Full-screen interactive Business Structure diagram"></iframe>
+ <button type="button" id="filterToggle" class="edge-toggle" aria-controls="filterPanel" aria-expanded="false" aria-label="Open business view and category filters"><span>View / Category</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M7 12h10M10 17h4"/></svg></button>
+ <div id="edgeMask" class="edge-mask"></div>
+ <aside class="edge-panel" id="filterPanel" aria-label="Business view and category controls">
+  <div class="panel-header"><div><small>DIAGRAM CONTROLS</small><h2>View & categories</h2></div><button class="x-btn" type="button" id="closeFilters" aria-label="Close filters">×</button></div>
+  <div class="form-field"><label for="viewSelect">Business view</label>
+   <select id="viewSelect">
+    <option value="all">Full company</option><option value="revenue">Sales → Payments → Collections</option>
+    <option value="debt">Debt Review operations</option><option value="removal">Removal</option>
+    <option value="mediation">Mediation</option><option value="care">Customer Care</option>
+    <option value="people">HR & People</option><option value="it">IT & Access</option><option value="thynkverse">Thynkverse layer</option>
+   </select>
+  </div>
+  <div class="form-field"><label for="categorySelect">Show category</label>
+   <select id="categorySelect"><option value="all">All categories</option><option value="department">Departments</option><option value="product">Products</option><option value="process">Processes</option><option value="checkpoint">Checkpoints</option><option value="system">IT / Systems</option><option value="thynkverse">Thynkverse</option></select>
+  </div>
+  <div class="form-field"><label for="findProcess">Find a process</label><input id="findProcess" placeholder="Sales, HR, automation…"></div>
+  <div class="panel-actions"><button type="button" id="panelFit">Fit diagram</button><button type="button" id="panelClose">Hide panel</button></div>
+  <div class="panel-actions owner-only"><button type="button" id="editLayout">Edit layout</button><button type="button" id="resetLayout">Reset positions</button></div>
+  <div class="panel-actions owner-only"><button type="button" id="importButton">Import JSON</button><button type="button" id="showAdd">+ Add process</button></div>
+  <p class="panel-hint">Tap the side tab to open filters. The panel automatically closes after inactivity, on selection, or when you tap outside it.</p>
+  <div class="panel-extra"><b>Business Structure only</b><p>No Architecture Atlas is included when you share the client-only link.</p><span id="draftCount">No custom processes added</span></div>
+ </aside>
+ <section class="detail-card" id="detailCard" hidden aria-label="Selected process information">
+  <div class="detail-top"><div><small id="detailType">PROCESS</small><h2 id="detailTitle">Business process</h2></div><button type="button" class="x-btn" id="detailClose" aria-label="Close process information">×</button></div>
+  <div class="detail-body" id="detailBody"></div>
+ </section>
+ <div class="status-tip">Drag the map to move · Tap a box for details</div>
+
+ <div class="modal-backdrop" id="addModal" hidden>
+  <section class="modal-box" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+   <div class="modal-head"><div><small>BUSINESS STRUCTURE / OWNER EDITOR</small><h2 id="addTitle">Add another process</h2><p>Connect a new process to an existing box. Your additions will show on the diagram and can be shared with your client.</p></div><button class="x-btn" id="closeAdd" type="button" aria-label="Close add process">×</button></div>
+   <form id="addForm">
+    <div class="form-grid">
+     <div class="form-field wide"><label for="processTitle">Process or department name *</label><input id="processTitle" name="title" required maxlength="85" placeholder="e.g. Quality assurance"></div>
+     <div class="form-field"><label for="processParent">Connect after *</label><select id="processParent" name="parent" required></select></div>
+     <div class="form-field"><label for="processCategory">Category *</label><select id="processCategory" name="cat"><option value="process">Process</option><option value="department">Department</option><option value="product">Product</option><option value="checkpoint">Checkpoint</option><option value="system">IT / System</option><option value="thynkverse">Thynkverse</option></select></div>
+     <div class="form-field wide"><label for="processDesc">What happens at this step?</label><textarea id="processDesc" name="desc" maxlength="700" placeholder="Short explanation"></textarea></div>
+     <div class="form-field"><label for="processOwner">Responsible owner</label><input id="processOwner" name="owner" maxlength="110" placeholder="Team or role"></div>
+     <div class="form-field"><label for="processSystems">Systems used</label><input id="processSystems" name="systems" placeholder="CRM, SharePoint, Finwise"></div>
+     <div class="form-field wide"><label for="processNeeds">Requirements (comma separated)</label><input id="processNeeds" name="needs" placeholder="Approved data, signed documents"></div>
+    </div>
+    <p class="modal-note">These are diagram notes—not a live CRM/database change. Edits are saved in this browser. To share them, use the Client link or export the JSON.</p>
+    <div class="modal-actions"><button type="button" id="cancelAdd">Cancel</button><button type="submit" class="primary">+ Add connected process</button></div>
+   </form>
+  </section>
+ </div>
+ <div class="modal-backdrop" id="shareModal" hidden>
+  <section class="modal-box" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+   <div class="modal-head"><div><small>BUSINESS STRUCTURE / CLIENT DELIVERY</small><h2 id="shareTitle">Send Business Structure only</h2><p>Clients will see the business diagram and its side filters—not your Architecture Atlas, add-process editor or owner tools.</p></div><button class="x-btn" id="closeShare" type="button" aria-label="Close sharing">×</button></div>
+   <div class="form-field"><label for="clientName">Client/company name (optional)</label><input id="clientName" maxlength="100" placeholder="e.g. Remedy Debts"></div>
+   <div class="form-field"><label for="shareUrl">Client-only link</label><textarea id="shareUrl" readonly></textarea></div>
+   <p id="shareStatus"></p>
+   <div class="modal-actions"><button type="button" id="shareBase">Base structure only</button><button type="button" class="primary" id="copyShare">Copy client link</button></div>
+   <p class="modal-note">A sharing URL includes any custom processes embedded in it. Only include information suitable for sharing. This is a public-link preview, not a password-protected client portal.</p>
+  </section>
+ </div>
+ <input id="importFile" type="file" accept=".json,application/json" hidden>
+ <div class="message" id="message" hidden role="status"></div>
+</main>
+<script src="business-structure.js"></script>
+</body>
+</html>

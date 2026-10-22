@@ -1,6 +1,24 @@
 {
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/c/:code", "destination": "/client.html" }
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/c/:code",
+      "destination": "/client.html"
+    },
+    {
+      "source": "/business-flow",
+      "destination": "/business-flow.html"
+    },
+    {
+      "source": "/business-structure",
+      "destination": "/business-structure.html"
+    },
+    {
+      "source": "/architecture",
+      "destination": "/architecture.html"
+    }
   ]
 }
