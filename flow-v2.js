@@ -136,7 +136,7 @@ function zoomTo(factor,clientX,clientY){
 function makeRoot(stage,flow,expanded){
  const isDecision=branches(stage).length>0;
  const related=crossNodes(stage),details=hasDetail(stage);
- const klass=(isDecision?" featured":"")+(expanded?" open":"");
+ const klass=(isDecision?" featured":"")+(expanded?" open":"")+(state.node===stage.id?" selected":"");
  return '<button type="button" data-toggle="'+stage.id+'" aria-expanded="'+(expanded?"true":"false")+'" class="stage-node'+klass+'" style="--accent:'+flow.color+'"><div class="node-topline"><span class="node-id">'+stage.id+(isDecision?' ◇':'')+'</span><span class="node-state '+stage.status+'">'+escapeHTML(STATUS[stage.status]||"REFERENCE")+'</span></div><h3>'+escapeHTML(stage.title)+'</h3><p class="node-descr">'+escapeHTML(stage.desc)+'</p><div class="node-meta"><span>'+((stage.children||[]).length+branches(stage).length)+' connected checks · '+related.length+' external links</span><span class="expander">'+(expanded?"− Collapse":details?"+ Expand":"Inspect")+'</span></div></button>';
 }
 function crossChips(n){
@@ -158,7 +158,7 @@ function renderOutcomes(node){
 function renderTreeChild(node,depth){
  const exp=getExpansion().has(node.id),detail=hasDetail(node);
  return '<div class="tree-wrap" aria-expanded="'+(exp?'true':'false')+'" style="--accent:'+flowColor(node.flowId)+'">'
- +'<button type="button" class="tree-node '+(typeOf(node)==="decision"?"decision-box":"")+'" data-toggle="'+node.id+'" aria-expanded="'+(exp?'true':'false')+'">'
+ +'<button type="button" class="tree-node '+(typeOf(node)==="decision"?"decision-box":"")+(state.node===node.id?" selected":"")+'" data-toggle="'+node.id+'" aria-expanded="'+(exp?'true':'false')+'">'
  +'<span class="tree-node-top">'+(typeOf(node)==="decision"?'<i class="diamond-mark"></i>':'')+'<b>'+escapeHTML(node.id)+'</b><em>'+escapeHTML(STATUS[node.status]||"DETAIL")+'</em></span><strong>'+escapeHTML(node.title)+'</strong><span>'+escapeHTML(node.desc||"Inspect this documented process checkpoint.")+'</span><div class="node-meta"><span>'+((node.children||[]).length+branches(node).length)+' subprocesses</span><b class="expander">'+(exp?"− Collapse":detail?"+ Expand":"Details")+'</b></div></button>'
  +inspectBody(node)+crossChips(node)
  +(exp?renderBranch(node,depth+1):"")+'</div>';
@@ -245,6 +245,19 @@ function openFlow(id){
  }
  renderFlow();
  if(!sameFlow)scroll.scrollTop=0; // Only the subflow pane changes; the master canvas never moves.
+ // Deep-link navigation may reveal a later stage INSIDE the fixed subflow pane;
+ // never alter the master zoom/position or scroll the surrounding page.
+ if(node.depth>=0){
+  const stageId=flowId+"."+id.split(".")[1];
+  requestAnimationFrame(()=>{
+   const target=[...map.querySelectorAll("[data-stage]")].find(el=>el.dataset.stage===stageId);
+   if(!target||dialog.hidden)return;
+   const top=target.offsetTop;
+   if(!sameFlow||top<scroll.scrollTop||top>scroll.scrollTop+scroll.clientHeight-155){
+    scroll.scrollTop=Math.max(0,top-26);
+   }
+  });
+ }
  setURL(id);
  closeSearch();closeMobileMenu();
  markCurrentNav();
