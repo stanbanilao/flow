@@ -43,7 +43,7 @@ function removeOne(id){
  for(let i=EDGE.length-1;i>=0;i--)if(EDGE[i][0]===id||EDGE[i][1]===id)EDGE.splice(i,1);
  cy.getElementById(id).remove();delete D[id];added.delete(id);return true;
 }
-function readAll(){return Object.entries(D).map(([id,d])=>({id,title:d.title,cat:d.cat,type:d.type,desc:d.desc,owner:d.owner,custom:added.has(id)}))}
+function readAll(){return Object.entries(D).map(([id,d])=>({id,title:d.title,cat:d.cat,type:d.type,desc:d.desc,why:d.why,advice:d.advice,owner:d.owner,systems:d.systems,needs:d.needs,next:d.next,custom:added.has(id)}))}
 function saveShape(){
  const items=[];
  for(const id of added){if(!D[id])continue;const edge=EDGE.find(([source,target])=>target===id);if(!edge)continue;const d=D[id];items.push({id,parent:edge[0],title:d.title,cat:d.cat,desc:d.desc,owner:d.owner,why:d.why,advice:d.advice,systems:d.systems,needs:d.needs});}
