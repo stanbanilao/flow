@@ -7,8 +7,8 @@ const KEY="tv-business-structure-v3:"+code,frame=$("businessFrame"),panel=$("fil
 const clean=(value,max=350)=>String(value??"").replace(/[<>&"'\u0060]/g,"").trim().slice(0,max);
 let bridge=null,hideTimer=null,msgTimer=null,includeDraft=true,currentLink="",ready=false;
 function notice(t){const x=$("message");x.textContent=t;x.hidden=false;clearTimeout(msgTimer);msgTimer=setTimeout(()=>x.hidden=true,3600)}
-function closeFilters(){clearTimeout(hideTimer);panel.classList.remove("open");mask.classList.remove("visible");toggle.setAttribute("aria-expanded","false")}
-function delayHide(){clearTimeout(hideTimer);hideTimer=setTimeout(()=>{const active=document.activeElement;if(panel.contains(active)&&["INPUT","TEXTAREA","SELECT"].includes(active.tagName))return delayHide();closeFilters()},6500)}
+function closeFilters(){clearTimeout(hideTimer);if(panel.contains(document.activeElement)&&document.activeElement?.blur)document.activeElement.blur();panel.classList.remove("open");mask.classList.remove("visible");toggle.setAttribute("aria-expanded","false")}
+function delayHide(){clearTimeout(hideTimer);hideTimer=setTimeout(closeFilters,6500)}
 function openFilters(){panel.classList.add("open");mask.classList.add("visible");toggle.setAttribute("aria-expanded","true");delayHide()}
 toggle.onclick=()=>panel.classList.contains("open")?closeFilters():openFilters();
 $("closeFilters").onclick=$("panelClose").onclick=mask.onclick=closeFilters;
