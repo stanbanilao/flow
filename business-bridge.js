@@ -33,7 +33,7 @@ function addProcess(payload,initial=false){
  cy.getElementById(id).position({x:anchor.x+195,y:anchor.y+95+siblings*90});
  added.add(id);
  if(!initial){document.getElementById("viewSelect").value="all";document.getElementById("categorySelect").value="all";applyFilters();}
- return {id,...p};
+ return {...p,id};
 }
 function removeOne(id){
  if(!added.has(id))return false;
