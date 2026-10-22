@@ -13,8 +13,12 @@
       "destination": "/business-flow.html"
     },
     {
+      "source": "/business-structure",
+      "destination": "/business-structure.html"
+    },
+    {
       "source": "/architecture",
-      "destination": "/index.html"
+      "destination": "/architecture.html"
     }
   ]
 }
