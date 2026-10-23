@@ -36,9 +36,9 @@ jobs:
       - name: Test encrypted links, LIVE safety and static routes
         run: node --test tests/flow41.test.cjs
 
-      - name: Install pinned Playwright browser runner
+      - name: Install pinned Playwright driver (use runner Chrome)
         run: |
           npm install --no-save --ignore-scripts playwright@1.55.0
-          npx playwright install --with-deps chromium
+          command -v google-chrome || command -v chromium
       - name: End-to-end browser acceptance — desktop and mobile sized
         run: node tests/flow41-browser.cjs
