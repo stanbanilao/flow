@@ -67,7 +67,9 @@ const web=http.createServer(async(req,res)=>{
   const card=page.locator(".diagram-card").filter({hasText:"QA Operations"});await card.click();
   await page.locator(".process-node").first().click();
   await page.locator('[data-panel="connect-diagram"]').click();
-  await page.locator("#targetDiagram").selectOption({label:"Other / Finance & Payments"});
+  const targets=await page.locator("#targetDiagram option").allTextContents();
+  assert.ok(targets.some(text=>text.includes("Finance & Payments")),"Expected finance target, got: "+JSON.stringify(targets));
+  await page.locator("#targetDiagram").selectOption({index:0});
   await page.locator("#modalSubmit").click();
   assert.ok((await page.locator("#drawerContent").textContent()).includes("Finance & Payments"));
   await page.locator("[data-jump-diagram]").click();
