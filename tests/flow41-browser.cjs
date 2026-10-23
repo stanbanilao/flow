@@ -41,7 +41,7 @@ const web=http.createServer(async(req,res)=>{
   await page.route("https://fonts.googleapis.com/**",r=>r.abort());
   await page.route("https://fonts.gstatic.com/**",r=>r.abort());
   await page.goto(origin+"/library",{waitUntil:"domcontentloaded"});
-  await page.locator("#diagramGrid").waitFor({state:"visible"});
+  await page.locator("#newDiagram").waitFor({state:"visible"});
   assert.equal(await page.locator("#diagramCount").textContent(),"0");
   await page.locator("#newDiagram").click();
   await page.locator("#dialogName").fill("QA Operations");
