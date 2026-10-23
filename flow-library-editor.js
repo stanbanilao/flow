@@ -35,7 +35,7 @@ function openInspector(){
  const linkViews=outs.map(l=>{
   const other=l.to?d.nodes.find(x=>x.id===l.to):L.state.library.find(x=>x.id===l.toDiagram);
   if(!other)return"";
-  return '<div class="list-link"><span><strong>'+esc(other.title||other.name)+'</strong><small>'+esc(l.type)+(l.label?" · "+esc(l.label):"")+(l.toDiagram?" · Other diagram":"")+'</small></span><button class="x" type="button" data-remove-link="'+esc(l.id)+'" aria-label="Delete connection to '+esc(other.title||other.name)+'">×</button></div>';
+  return '<div class="list-link"><span><strong>'+esc(other.title||other.name)+'</strong><small>'+esc(l.type)+(l.label?" · "+esc(l.label):"")+(l.toDiagram?" · Other diagram":"")+'</small></span>'+(l.toDiagram?'<button type="button" class="quiet" data-jump-diagram="'+esc(l.toDiagram)+'">Open ↗</button>':'')+'<button class="x" type="button" data-remove-link="'+esc(l.id)+'" aria-label="Delete connection to '+esc(other.title||other.name)+'">×</button></div>';
  }).join("");
  $("drawerContent").innerHTML=
  '<div class="field"><label for="nodeTitle">Process name</label><input id="nodeTitle" data-node-field="title" maxlength="95" value="'+esc(n.title)+'"></div>'+
@@ -63,6 +63,7 @@ $("drawerContent").addEventListener("change",e=>{
  save(d=>{const n=d.nodes.find(x=>x.id===state.selectedId);if(n)n.kind=value});renderBoard();
 });
 $("drawerContent").addEventListener("click",e=>{
+ const jump=e.target.closest("[data-jump-diagram]");if(jump){L.state.returnTo=L.state.activeId;L.openDiagram(jump.dataset.jumpDiagram);return}
  const select=e.target.closest("[data-select-node]");if(select){selectNode(select.dataset.selectNode);return}
  const remove=e.target.closest("[data-remove-link]");if(remove){save(d=>d.links=d.links.filter(l=>l.id!==remove.dataset.removeLink));renderBoard();openInspector();return}
  const btn=e.target.closest("[data-panel]");if(!btn)return;
