@@ -4,7 +4,7 @@
 const $=id=>document.getElementById(id),KEY="thynkverse-flow-library-v41";
 const industries=["Debt Review","Joinery & Estimating","Security Automation","Mediation","Other"];
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const clean=(s,n=160)=>String(s??"").replace(/[<>&"'\x60]/g,"").trim().slice(0,n);
+const clean=(s,n=160)=>String(s??"").replace(/[\u0000-\u001F\u007F]/g," ").trim().slice(0,n);
 const uid=()=>crypto.randomUUID?.()||"node-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,9);
 const clone=o=>JSON.parse(JSON.stringify(o)),now=()=>new Date().toISOString();
 const time=s=>{const t=Date.parse(s);return Number.isFinite(t)?new Date(t).toLocaleString("en-ZA",{day:"2-digit",month:"short",year:"numeric"}):"Draft"};
