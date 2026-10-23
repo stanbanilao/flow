@@ -31,7 +31,9 @@ const web=http.createServer(async(req,res)=>{
 (async()=>{
  await new Promise(ok=>web.listen(0,"127.0.0.1",ok));
  const origin="http://127.0.0.1:"+web.address().port;
- const browser=await chromium.launch({headless:true,args:["--no-sandbox"]});
+ const chromePath=["/usr/bin/google-chrome","/usr/bin/chromium"].find(f=>fs.existsSync(f));
+ if(!chromePath)throw Error("Runner Chrome/Chromium is not installed");
+ const browser=await chromium.launch({headless:true,executablePath:chromePath,args:["--no-sandbox"]});
  const errors=[];
  const pages=[];
  try{
