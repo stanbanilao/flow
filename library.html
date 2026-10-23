@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0F151D">
+<meta name="description" content="Thynkverse Flow Library. Create multi-industry process diagrams, connect operations, save revisions and share time-limited client snapshots.">
+<title>FLOW Library · Thynkverse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="flow-library.css">
+</head>
+<body>
+<header class="appbar">
+  <div class="brand"><img src="assets/thynkverse-flow-wordmark.svg" alt="Thynkverse" /><span class="brand-rule"></span><div class="flowbrand">FLOW <small>LIBRARY / 4.1</small></div></div>
+  <nav class="topnav" aria-label="Flow sections"><a href="/studio">Business Studio</a><a class="current" href="/library" aria-current="page">Diagram Library</a><a href="/architecture">Architecture Atlas</a></nav>
+  <div class="topright"><span class="storage-state" id="storageState">Browser drafts</span><button type="button" class="quiet action" id="exportAll" title="Back up your whole library">Export library</button></div>
+</header>
+<main class="library-main">
+  <section id="homeView" class="library-home">
+    <div class="library-hero">
+      <div class="hero-text"><span class="eyebrow">Your workflow collection</span><h1>Every industry has its own way of working.</h1><p>Build the structure, connect each handoff and keep the next revision. Your approved seven-system architecture stays separate as the Thynkverse reference.</p><div class="hero-actions"><button id="newDiagram" class="primary" type="button">+ Create a diagram</button><button id="importLibrary" class="subtle" type="button">Import a diagram</button></div></div>
+      <div class="hero-graphic" aria-hidden="true"><div class="hero-line"></div><span class="graphic-node n1">01 · Enquiry</span><span class="graphic-node n2">02 · Assessment</span><span class="graphic-node n3">03 · Delivery</span><span class="graphic-node n4">04 · Reconcile</span><b>→</b></div>
+    </div>
+    <div class="section-top"><div><span class="eyebrow">Your library</span><h2>Business diagrams <span id="diagramCount">0</span></h2></div><div class="library-filters"><input id="librarySearch" type="search" placeholder="Search industry or diagram" aria-label="Search diagrams"><select id="industryFilter" aria-label="Filter industry"><option value="all">All industries</option><option>Debt Review</option><option>Joinery & Estimating</option><option>Security Automation</option><option>Mediation</option><option>Other</option></select></div></div>
+    <div id="diagramGrid" class="diagram-grid"></div>
+    <div id="emptyState" class="empty-state" hidden><div class="empty-icon">◇</div><h3>Your library starts here.</h3><p>Create a blank diagram or begin with an optional industry template. Existing Business Structure and the Architecture Atlas remain untouched.</p><button type="button" class="primary" id="emptyCreate">Create your first diagram →</button></div>
+    <section class="template-section"><div><span class="eyebrow">Starting points</span><h2>Templates for different industries</h2><p>These are editable examples. They do not claim to represent a particular client's approved business workflow.</p></div><div id="templateGrid" class="template-grid"></div></section>
+  </section>
+
+  <section id="editorView" class="editor-view" hidden>
+    <div class="editor-bar">
+      <button type="button" id="backLibrary" class="icon-btn" aria-label="Back to library">←</button>
+      <div class="diagram-meta"><span class="eyebrow" id="editorIndustry">WORKFLOW</span><h1 id="editorName">Business workflow</h1><span id="editorUpdated">Draft</span></div>
+      <div class="editor-actions">
+        <button id="renameDiagram" type="button" class="quiet" title="Rename this diagram">Rename</button>
+        <button id="addNode" type="button" class="primary">+ Process</button>
+        <button id="saveRevision" type="button" class="quiet">Save version</button>
+        <button id="versionsOpen" type="button" class="quiet">History</button>
+        <button id="shareOpen" type="button" class="outline">↗ Share</button>
+      </div>
+    </div>
+    <div class="diagram-stage" id="diagramStage">
+      <div class="editor-guidance">Tap a process for details · Drag a box to reposition · Connect using the inspector</div>
+      <div class="pan-viewport" id="panViewport" tabindex="0" aria-label="Interactive flow diagram canvas">
+        <div id="diagramWorld" class="diagram-world"><svg id="edgeSvg" class="edge-svg" aria-hidden="true"></svg><div id="diagramNodes" class="diagram-nodes"></div></div>
+      </div>
+      <button type="button" id="editorPanelOpen" class="edge-handle" aria-controls="editorDrawer" aria-expanded="false" aria-label="Open selected process and editor settings">DETAILS <span>↗</span></button>
+      <div class="zoom-controls"><button type="button" id="zoomOut" aria-label="Zoom out">−</button><span id="zoomValue">100%</span><button type="button" id="zoomIn" aria-label="Zoom in">+</button><button type="button" id="fitCanvas">Fit</button></div>
+      <div class="pending-connect" id="connectionPrompt" hidden><span id="connectionText">Choose the process to connect.</span><button type="button" id="cancelConnection">Cancel</button></div>
+    </div>
+  </section>
+  <div id="drawerScrim" class="drawer-scrim"></div>
+  <aside id="editorDrawer" class="glass-drawer right" aria-label="Process inspector" aria-hidden="true">
+    <div class="drawer-heading"><div><span class="eyebrow" id="drawerKicker">EDIT PROCESS</span><h2 id="drawerTitle">Select a process</h2><p id="drawerSubtitle">Choose a node to edit its details and connections.</p></div><button class="x" id="drawerClose" aria-label="Close process details">×</button></div>
+    <div id="drawerContent" class="drawer-body"></div>
+  </aside>
+  <aside id="versionDrawer" class="glass-drawer right" aria-label="Diagram revision history" aria-hidden="true">
+    <div class="drawer-heading"><div><span class="eyebrow">VERSIONS</span><h2>Revision history</h2><p>Each saved version captures all processes and relationships at that point.</p></div><button class="x" id="versionClose" aria-label="Close revision history">×</button></div>
+    <div id="versionItems" class="drawer-body"></div>
+  </aside>
+  <div id="modalShade" class="modal-shade" hidden>
+    <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-title"><div><span class="eyebrow" id="modalKicker">FLOW LIBRARY</span><h2 id="modalTitle">Create a diagram</h2><p id="modalIntro">Build an independent industry workflow.</p></div><button class="x" id="modalClose" aria-label="Close dialog">×</button></div><form id="modalForm"><div id="modalFields"></div><div class="modal-bottom"><button id="modalCancel" type="button" class="quiet">Cancel</button><button id="modalSubmit" type="submit" class="primary">Create diagram</button></div></form><p id="modalMessage" class="modal-message" role="status"></p></section>
+  </div>
+  <input id="importFile" type="file" accept=".json,application/json" hidden>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</main>
+<script src="flow-library.js"></script>
+</body>
+</html>
