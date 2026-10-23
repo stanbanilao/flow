@@ -95,6 +95,14 @@ function openShare(){
  S.closeDrawer();createShare();$("shareDialog").hidden=false;
 }
 $("shareOpen").onclick=$("panelShare").onclick=openShare;
+// Legacy URL-encoded shares do not expire. Do not make them available on LIVE.
+for(const id of ["shareOpen","panelShare"]){$(id).disabled=true;$(id).title="Client sharing is unavailable on LIVE pending authenticated secure sharing"}
+fetch("/api/flow-capabilities",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(caps=>{
+ if(caps&&caps.expiringShares&&caps.ownerAuthentication){
+  for(const id of ["shareOpen","panelShare"]){$(id).disabled=false;$(id).title="Create client link"}
+ }
+}).catch(()=>{});
+
 $("shareName").oninput=createShare;
 $("toggleShareDraft").onclick=()=>{shareDraft=!shareDraft;createShare()};
 $("copyShare").onclick=async()=>{
