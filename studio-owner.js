@@ -105,7 +105,8 @@ $("copyShare").onclick=async()=>{
   S.toast("Business-only client link copied");
  }catch(e){$("shareURL").focus();$("shareURL").select();S.toast("Copy this selected link manually")}
 };
-$("businessFrame").onload=()=>{
+function connectBusiness(){
+ if(loaded)return;
  try{
   const b=$("businessFrame").contentWindow.FlowStudioBusiness;
   if(!b||!b.ready)throw Error("Business diagram bridge was not ready");
@@ -120,7 +121,9 @@ $("businessFrame").onload=()=>{
   loaded=true;
   if(drafts.length&&imported!==drafts.length)S.toast("Some custom process nodes could not be restored");
  }catch(err){S.toast("Diagram initialization failed: "+(err.message||"Unknown error"))}
-};
+}
+$("businessFrame").onload=connectBusiness;
+try{if($("businessFrame").contentDocument?.readyState==="complete")setTimeout(connectBusiness,0)}catch(err){}
 window.__flowStudioDiagnostics=Object.freeze({
  isClient:client,ready:()=>loaded,customCount:()=>S.bridge()?.customNodes().length||0,
  getBusinessCamera:()=>S.bridge()?.getCamera()||null,
