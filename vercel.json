@@ -19,6 +19,10 @@
     {
       "source": "/architecture",
       "destination": "/architecture.html"
+    },
+    {
+      "source": "/studio",
+      "destination": "/studio.html"
     }
   ]
 }
