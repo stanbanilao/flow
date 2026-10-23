@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0F151D"><meta name="robots" content="noindex,nofollow"><title>Shared business diagram · Thynkverse Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="flow-library.css"><link rel="stylesheet" href="flow-share.css"></head>
+<body>
+<header class="appbar"><div class="brand"><img src="assets/thynkverse-flow-wordmark.svg" alt="Thynkverse"><span class="brand-rule"></span><div class="flowbrand">FLOW <small>CLIENT VIEW</small></div></div><span id="expiryLabel" class="expiry-label">Secure view · checking link</span></header>
+<main class="share-main">
+ <section id="shareLoading" class="access-message"><div class="access-logo">◇</div><span class="eyebrow">PRIVATE SNAPSHOT</span><h1>Opening your business diagram</h1><p>Validating the link and its expiry.</p></section>
+ <section id="shareError" class="access-message" hidden><div class="access-logo">×</div><span class="eyebrow">LINK UNAVAILABLE</span><h1 id="errorTitle">This link cannot be opened</h1><p id="errorText">Request a new diagram link from the sender.</p></section>
+ <section id="shareView" class="share-view" hidden>
+  <div class="share-top"><div><span class="eyebrow" id="shareIndustry">BUSINESS DIAGRAM</span><h1 id="shareName">Business process</h1></div><div class="share-badges"><span>Read-only snapshot</span><span id="shareExpiry"></span></div></div>
+  <div class="share-canvas"><div class="editor-guidance">Drag the background to move · Tap a process to read its definition</div><div class="pan-viewport" id="shareViewport" tabindex="0" aria-label="Read-only business structure diagram"><div id="shareWorld" class="diagram-world"><svg class="edge-svg" id="shareEdges" aria-hidden="true"></svg><div id="shareNodes" class="diagram-nodes"></div></div></div>
+  <div class="zoom-controls"><button id="shareMinus" type="button">−</button><span id="shareScale">100%</span><button id="sharePlus" type="button">+</button><button id="shareFit" type="button">Fit</button></div>
+  <div class="drawer-scrim" id="shareScrim"></div><aside id="shareDetails" class="glass-drawer right" aria-label="Process definition" aria-hidden="true"><div class="drawer-heading"><div><span class="eyebrow">PROCESS DETAILS</span><h2 id="shareDetailTitle">Process</h2><p>Read-only diagram information</p></div><button id="shareCloseDetails" class="x" aria-label="Close details">×</button></div><div id="shareDetailBody" class="drawer-body"></div></aside>
+  </div>
+  <p class="client-disclaimer">This is a fixed, read-only snapshot. Changes made after the link was issued are not included. Cross-diagram links may require a separate shared diagram.</p>
+ </section>
+</main>
+<script src="flow-share.js"></script>
+</body></html>
