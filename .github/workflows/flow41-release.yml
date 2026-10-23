@@ -1,0 +1,44 @@
+name: FLOW 4.1 Release Checks
+
+on:
+  push:
+    branches:
+      - "release/flow41-live-safe-*"
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Security gate, source and workflow unit tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - name: Checkout reviewed commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - name: Record runner Node version
+        run: node --version
+      - name: Check JavaScript syntax
+        run: |
+          node --check api/flow-share.js
+          node --check api/flow-capabilities.js
+          node --check flow-library-core.js
+          node --check flow-library-editor.js
+          node --check flow-library-sharing.js
+          node --check flow-share.js
+          node --check studio.js
+          node --check studio-owner.js
+      - name: Test encrypted links, LIVE safety and static routes
+        run: node --test tests/flow41.test.cjs
+
+      - name: Install pinned Playwright driver (use runner Chrome)
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.55.0
+          command -v google-chrome || command -v chromium
+      - name: End-to-end browser acceptance — desktop and mobile sized
+        run: node tests/flow41-browser.cjs

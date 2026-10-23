@@ -19,6 +19,18 @@
     {
       "source": "/architecture",
       "destination": "/architecture.html"
+    },
+    {
+      "source": "/studio",
+      "destination": "/studio.html"
+    },
+    {
+      "source": "/library",
+      "destination": "/library.html"
+    },
+    {
+      "source": "/share",
+      "destination": "/share.html"
     }
   ]
 }
