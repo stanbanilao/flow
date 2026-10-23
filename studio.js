@@ -108,7 +108,8 @@ function detailsBusiness(id){
  const next=(d.next||[]).map(x=>bridge.getNode(x)).filter(Boolean);
  if(next.length)content+=wrapSection("Connected business handoffs",trail(next,"NEXT","business"));
  if(!client){
-  const ids=(mapLinks[id]||["F02.1"]).filter(x=>nMap.has(x));
+  const ids=(mapLinks[id]||[]).filter(x=>nMap.has(x));
+  if(!ids.length)content+=wrapSection("Architecture connection",'<div class="detail-info">No verified system-architecture mapping has been assigned to this process yet.</div>');
   if(ids.length)content+=wrapSection("Connected system architecture",
    '<p style="font-size:11px;color:var(--fog);line-height:1.6">These controls, systems and rules sit behind the business process. Open any definition without leaving this diagram.</p>'+
    ids.map(x=>{const n=nMap.get(x);return'<button type="button" class="cross-link" data-arch="'+safe(x)+'"><span>'+safe(n.title)+'<small>'+safe(fMap.get(n.flowId).title)+'</small></span><b>'+safe(x)+' ↗</b></button>'}).join(""));
