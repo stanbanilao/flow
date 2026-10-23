@@ -3,6 +3,19 @@
 "use strict";
 const L=window.FlowLib;if(!L)throw Error("Library core missing");
 const {$,current,notify,modal,closeModal,esc,clean}=L;
+// Secure by default. Preview-only sharing is enabled only after capability confirmation.
+const shareButton=$("shareOpen");
+shareButton.disabled=true;shareButton.textContent="Sharing unavailable";shareButton.title="Expiring client links need authenticated administration before LIVE release";
+fetch("/api/flow-capabilities",{cache:"no-store"}).then(async response=>{
+ if(!response.ok)throw Error("Capabilities unavailable");
+ const data=await response.json();
+ if(data.expiringShares===true){
+  shareButton.disabled=false;shareButton.textContent="↗ Share";
+  shareButton.title="Create a time-limited client snapshot";
+ }else{
+  shareButton.disabled=true;shareButton.title="Client sharing is disabled on LIVE until owner authentication is installed";
+ }
+}).catch(()=>{shareButton.disabled=true;shareButton.title="Cannot verify sharing permissions. Sharing remains disabled"});
 $("shareOpen").onclick=()=>{
  const d=current();if(!d)return;
  modal({kicker:"CLIENT SNAPSHOT",title:"Create an expiring client link",intro:"Share a fixed, read-only copy of this diagram. Its expiry is checked on the server each time the link is opened.",
