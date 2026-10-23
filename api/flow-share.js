@@ -42,6 +42,8 @@ function requireSameOrigin(req){
  try{return new URL(origin).host===host}catch(err){return false}
 }
 module.exports=async function handler(req,res){
+ // LIVE safety gate: do not expose anonymous snapshot issuance on a public custom domain.
+ if(process.env.VERCEL_ENV==="production")return send(res,503,{error:"Client snapshot sharing is disabled on LIVE until owner authentication is available"});
  const secret=key();
  if(!secret)return send(res,503,{error:"Expiring links are not configured for this deployment"});
  if(req.method==="POST"){
