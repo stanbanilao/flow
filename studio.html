@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0F151D">
+<meta name="description" content="Thynkverse Flow Studio: Business Structure and interconnected system architecture in one fullscreen interactive workspace.">
+<title>FLOW Studio · Thynkverse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="studio.css">
+</head>
+<body>
+<header class="studio-bar">
+ <div class="identity">
+  <img src="assets/thynkverse-flow-wordmark.svg" alt="Thynkverse" class="wordmark">
+  <span class="identity-divider" aria-hidden="true"></span>
+  <div class="product-mark"><b>FLOW</b><span>STUDIO / 4.0</span></div>
+ </div>
+ <nav class="mode-switch owner-only" aria-label="Diagram views">
+  <button type="button" id="businessMode" class="selected" aria-pressed="true">Business Structure</button>
+  <button type="button" id="architectureMode" aria-pressed="false">System Architecture</button>
+ </nav>
+ <div class="top-actions">
+  <button type="button" class="utility owner-only" id="addOpen" title="Add a connected business process"><span class="action-icon">+</span><span class="desktop-label">Add process</span></button>
+  <button type="button" class="utility owner-only" id="shareOpen" title="Create a client-only share link"><span class="action-icon">↗</span><span class="desktop-label">Share</span></button>
+  <button type="button" class="icon-btn" id="searchOpen" title="Search processes" aria-label="Search all diagrams">⌕</button>
+ </div>
+</header>
+
+<main class="studio-stage" id="studioStage">
+ <div class="workspace canvas-business" id="businessPane">
+  <iframe id="businessFrame" src="studio-business-engine.html" title="Interactive Thynkverse business process diagram" loading="eager"></iframe>
+ </div>
+ <div class="workspace canvas-architecture" id="architecturePane" hidden>
+  <div class="architecture-viewport" id="archViewport" aria-label="Architecture diagram — pan and zoom" tabindex="0">
+   <div class="architecture-world" id="archWorld">
+    <svg class="architecture-edges" id="archEdges" aria-hidden="true"></svg>
+    <div class="architecture-nodes" id="archNodes"></div>
+   </div>
+  </div>
+ </div>
+
+ <div class="canvas-heading" id="canvasHeading"><span id="canvasIndex">01 / BUSINESS STRUCTURE</span><strong id="canvasTitle">One business. Every process connected.</strong><small id="canvasHint">Select a box to reveal its explanation and related system architecture.</small></div>
+ <button class="edge-trigger" id="controlsOpen" type="button" aria-controls="controlsDrawer" aria-expanded="false" title="View & Category controls"><span class="edge-trigger-line"></span><span>CONTROLS</span><span class="edge-trigger-arrow">→</span></button>
+ <div class="canvas-utility">
+  <button type="button" id="goOverview" class="canvas-util" hidden>← All systems</button>
+  <button type="button" id="fitMap" class="canvas-util" title="Fit diagram to the visible canvas">Fit</button>
+  <button type="button" id="zoomOut" class="canvas-util" aria-label="Zoom out">−</button>
+  <span class="scale-text" id="scaleText">100%</span>
+  <button type="button" id="zoomIn" class="canvas-util" aria-label="Zoom in">+</button>
+ </div>
+ <div class="status-note" id="statusNote">Read-only architecture reference · diagrams do not trigger real system actions</div>
+ <div class="scrim" id="scrim"></div>
+
+ <aside class="glass-drawer left" id="controlsDrawer" aria-label="Diagram filters and navigation" aria-hidden="true">
+  <header class="drawer-header">
+   <div><span class="overline">CONTROL SURFACE / LEFT</span><h2>View & settings.</h2><p>Keep the canvas clear. Controls appear only when needed.</p></div>
+   <button type="button" class="close-btn" data-close aria-label="Close controls">×</button>
+  </header>
+  <div class="drawer-scroll">
+   <section class="drawer-section" id="businessControls">
+    <h3>Business Structure</h3>
+    <label class="field"><span>Business view</span><select id="businessView"><option value="all">Full company</option><option value="revenue">Sales → Payments → Collections</option><option value="debt">Debt Review operations</option><option value="removal">Debt Review removal</option><option value="mediation">Mediation</option><option value="care">Customer Care</option><option value="people">HR & People</option><option value="it">IT & Access</option><option value="thynkverse">Thynkverse layer</option></select></label>
+    <label class="field"><span>Show category</span><select id="businessCategory"><option value="all">All categories</option><option value="department">Departments</option><option value="product">Products</option><option value="process">Processes</option><option value="checkpoint">Checkpoints</option><option value="system">IT / Systems</option><option value="thynkverse">Thynkverse</option></select></label>
+    <div class="drawer-actions"><button type="button" id="resetBusinessFilters">Show all</button><button type="button" id="fitBusinessMap">Fit map</button></div>
+   </section>
+   <section class="drawer-section" id="architectureControls" hidden>
+    <h3>System architecture</h3>
+    <p class="section-copy">Seven architectural domains, with real subprocesses and cross-system relationships.</p>
+    <div id="domainLinks" class="domain-links"></div>
+   </section>
+   <section class="drawer-section owner-only">
+    <h3>Owner tools</h3>
+    <div class="owner-tool-list">
+      <button type="button" id="panelAdd">+ Add connected business process</button>
+      <button type="button" id="panelShare">↗ Create client-only link</button>
+      <button type="button" id="exportDraft">↓ Export custom processes (JSON)</button>
+      <button type="button" id="importDraft">↑ Import saved JSON</button>
+    </div>
+   </section>
+   <section class="drawer-section fine-print"><span class="overline">STATUS</span><p>Design and references are explanatory. Accepted historical tests are not live production telemetry.</p></section>
+  </div>
+ </aside>
+
+ <aside class="glass-drawer right" id="detailDrawer" aria-label="Selected node definition" aria-hidden="true">
+  <header class="drawer-header">
+   <div><span class="overline" id="detailEyebrow">PROCESS DEFINITION</span><h2 id="detailTitle">Select any process.</h2><p id="detailSubtitle">A connected explanation appears here.</p></div>
+   <button type="button" class="close-btn" data-close aria-label="Close definition">×</button>
+  </header>
+  <div class="drawer-scroll" id="detailContent" tabindex="-1"></div>
+ </aside>
+
+ <aside class="glass-drawer right search-drawer" id="searchDrawer" aria-label="Find processes" aria-hidden="true">
+  <header class="drawer-header"><div><span class="overline">QUICK SEARCH</span><h2>Find a process.</h2><p>Search Business Structure or the architecture below it.</p></div><button type="button" class="close-btn" data-close aria-label="Close search">×</button></header>
+  <div class="drawer-scroll">
+   <label class="field"><span>Search terms</span><input id="searchText" type="search" placeholder="Example: approval, collections, worker…" autocomplete="off"></label>
+   <div id="searchResults" class="search-results"></div>
+  </div>
+ </aside>
+
+ <div class="dialog-layer" id="editorDialog" hidden>
+  <section class="dialog-card" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+   <div class="dialog-header"><div><span class="overline">BUSINESS STRUCTURE / OWNER</span><h2 id="editorTitle">Add a connected process.</h2><p>Add another step to the existing business flow without replacing the original.</p></div><button type="button" class="close-btn" data-dialog-close aria-label="Close editor">×</button></div>
+   <form id="editorForm" class="dialog-fields">
+    <label class="field"><span>Process name *</span><input id="editName" name="name" maxlength="85" required placeholder="e.g. Quality review"></label>
+    <div class="two-fields">
+      <label class="field"><span>Connect after *</span><select id="editParent" name="parent" required></select></label>
+      <label class="field"><span>Category</span><select id="editCategory" name="category"><option value="process">Process</option><option value="department">Department</option><option value="product">Product</option><option value="checkpoint">Decision / Checkpoint</option><option value="system">IT / System</option><option value="thynkverse">Thynkverse</option></select></label>
+    </div>
+    <label class="field"><span>What happens?</span><textarea id="editDescription" rows="2" maxlength="700" placeholder="The action, rule or expected outcome…"></textarea></label>
+    <label class="field"><span>Responsible owner</span><input id="editOwner" maxlength="110" placeholder="Team or role"></label>
+    <div class="two-fields">
+     <label class="field"><span>Systems used</span><input id="editSystems" placeholder="CRM, SharePoint"></label>
+     <label class="field"><span>Requirements</span><input id="editNeeds" placeholder="Approved documents, access"></label>
+    </div>
+    <p class="form-caveat">Local draft only. Edits are saved in this browser, not in a central company database.</p>
+    <footer class="dialog-footer"><button type="button" class="quiet-btn" data-dialog-close>Cancel</button><button class="primary-btn" type="submit">Add connected process →</button></footer>
+   </form>
+  </section>
+ </div>
+ <div class="dialog-layer" id="shareDialog" hidden>
+  <section class="dialog-card compact" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+   <div class="dialog-header"><div><span class="overline">CLIENT DELIVERY</span><h2 id="shareTitle">Share only Business Structure.</h2><p>Clients receive the diagram and explanations, but not the System Architecture tab or owner tools.</p></div><button type="button" class="close-btn" data-dialog-close aria-label="Close sharing">×</button></div>
+   <label class="field"><span>Client label (optional)</span><input id="shareName" maxlength="100" placeholder="e.g. Example Business"></label>
+   <label class="field"><span>Shareable URL</span><textarea id="shareURL" rows="3" readonly></textarea></label>
+   <p id="shareMessage" class="share-message"></p>
+   <div class="dialog-footer"><button type="button" class="quiet-btn" id="toggleShareDraft">Base structure only</button><button type="button" class="primary-btn" id="copyShare">Copy client link →</button></div>
+   <p class="form-caveat">A client-only view is not password protection. Never include private customer data in shared diagram labels or URLs.</p>
+  </section>
+ </div>
+ <input type="file" id="importFile" accept=".json,application/json" hidden>
+ <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</main>
+<script src="architecture-data.js"></script>
+<script src="architecture-expansion.js"></script>
+<script src="studio.js"></script>
+</body>
+</html>
